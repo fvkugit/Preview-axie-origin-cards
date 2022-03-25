@@ -36,6 +36,7 @@
             let axieId = parseInt(query);
             if (axieId) {
                 loadAxie(axieId)
+                $("#axieId").val(axieId);
             }else if(!axieId && query){
                 alert("You have entered an invalid Axie ID!")
             }
