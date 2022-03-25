@@ -25,12 +25,15 @@
             cargado();
         });
 
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
         // Update image on change select.
         for (let x in allParts){
             $(document).on('change','#select' + x,function(){
                 let img = document.getElementById(x + "Image")
                 let selected = document.getElementById("select" + x).value
-                document.getElementById(x + "Image").src='./images/cards/' + x + '/' + selected + '.png';
+                document.getElementById(x + "Image").src='./images/cards/' + capitalizeFirstLetter(x) + '/' + selected + '.png';
             });
         }
 
