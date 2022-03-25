@@ -14,12 +14,30 @@
 <body style="background-color: #595959; color: #fff">
     <header><h1 class="text-center mt-3">Preview Axie Origin Cards</h1></header>
     <script>
+        let allParts = {
+            "ears": ["Beetle Spike","Belieber","Bubblemaker","Clover","Curly","Curved Spine","Ear Breathing","Early Bird","Earwing","Friezard","Gill","Hollow","Inkling","Innocent Lamb","Larva","Leaf Bug","Leafy","Lotus","Nimo","Nut Cracker","Nyan","Owl","Pagona","Peace Maker","Pink Cheek","Puppy","Risky Bird","Rosa","Sakura","Seaslug","Sidebarb","Small Frill","Swirl","Tassels","Tiny Fan","Zen"],
+            "back": ["Anemone","Balloon","Bidens","Blue Moon","Bone Sail","Buzz Buzz","Croc","Cupid","Furball","Garish Worm","Goldfish","Green Thorns","Hermit","Hero","Indian Star","Jaguar","Kingfisher","Mint","Perch","Pigeon Post","Pumpkin","Raven","Red Ear","Risky Beast","Ronin","Sandal","Scarab","Shitake","Snail Shell","Spiky Wing","Sponge","Timber","Tri Feather","Tri Spikes","Turnip","Watering Can"],
+            "mouth": ["Axie Kiss","Catfish","Confident","Cute Bunny","Doubletalk","Goda","Herbivore","Hungry Bird","Kotaro","Lam Handsome","Lam","Little Owl","Mosquito","Nut Cracker","Peace Maker","Pincer","Piranha","Razor Bite","Risky Fish","Serious","Silence Whisper","Square Teeth","Tiny Turtle","Toothless Bite","Zigzag"],
+            "tail": ["Ant","Carrot","Cattail","Cloud","Cottontail","Feather Fan","Fish Snack","Gerbil","Gila","Granma's Fan","Grass Snake","Gravel Ant","Hare","Hatsune","Hot Butt","Iguana","Koi","Navaga","Nimo","Nut Cracker","Post Fight","Potato Leaf","Pupae","Ranchu","Rice","Shiba","Shrimp","Snake Jar","Swallow","Tadpole","The Last One","Thorny Capillar","Tiny Dino","Twin Tail","Wall Gecko","Yam"],
+            "horn": ["Anemone","Antenna","Arco","Babylonia","Bamboo Shoot","Beech","Bumpy","Cactus","Caterpillars","Cerastes","Clamshell","Cuckoo","Dual Blade","Eggshell","Feather Spear","Golden Bamboo Shoot","Imp","Incisor","Kestrel","Lagging","Leaf Bug","Little Branch","Merry","Oranda","Parasite","Pliers","Pocky","Rose Bud","Scaly Spear","Scaly Spoon","Shoal Star","Strawberry Shortcake","Teal Shell","Trump","Unko","Watermelon","Wing Horn"]
+        }
         $(document).ready(function(){
             cargado();
         });
+
+        // Update image on change select.
+        for (let x in allParts){
+            $(document).on('change','#select' + x,function(){
+                let img = document.getElementById(x + "Image")
+                let selected = document.getElementById("select" + x).value
+                document.getElementById(x + "Image").src='./images/cards/' + x + '/' + selected + '.png';
+            });
+        }
+
         function cargado(){
             refresh();
         }
+
         function getQueryParameter(name) {
             var query = window.location.search.substring(1);
             var vars = query.split("&");
@@ -31,6 +49,7 @@
             }
             return false;
         }
+
         function refresh(){
             let query = getQueryParameter("axieId")
             let axieId = parseInt(query);
@@ -41,23 +60,40 @@
                 alert("You have entered an invalid Axie ID!")
             }
         }
+
+        const random = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+        function randomAxie(){
+            let rId = random(100,99999)
+            loadAxie(rId)
+            $("#axieId").val(rId);
+        }
+
         async function getAxie(id, callback) {
             let data = await getAxieDetails(id);
             return data
         }
+
         async function loadAxie(id){
             let axie = await getAxie(id);
             let axieParts = axie.parts
-            renderCards(axieParts, "cards")
+            renderCards(axieParts, "cards", allParts)
         }
-        function renderCards(parts, target){
+
+        function renderCards(parts, target, allParts){
             for(let i in parts){
                 let newData = '<div class="col-sm mb-5">';
-                newData += '<img src="./images/cards/' + parts[i].type + '/' + parts[i].name + '.png"' + "onerror=javascript:this.src=" + '"images/cards/Unknown.png"' +'>'
+                let aPart = (parts[i].type).toLowerCase()
+                newData += '<img id="' + aPart + 'Image" src="./images/cards/' + parts[i].type + '/' + parts[i].name + '.png"' + "onerror=javascript:this.src=" + '"images/cards/Unknown.png"' +'>'
+                newData += '<select class="custom-select" id="select' + aPart + '"><option selected>' + parts[i].name + '</option></select>'
                 $("#" + target).append(newData + "</div>");
+                if (allParts[aPart]){
+                    for(let x in allParts[aPart]){
+                        $("#select" + aPart).append('<option value="' + allParts[aPart][x] + '">'+allParts[aPart][x]+'</option>');
+                    }
+                }
             }
         }
-    
+
     </script>
     <div id="headerDiv"></div><br/>
     <div class="container">
@@ -68,7 +104,8 @@
                 </div>
                 <input type="text" class="form-control" id="axieId" name="axieId" placeholder="Axie ID" aria-label="axieid">
                 <div class="input-group-append">
-                    <button type="submit" class="btn btn-outline-light" type="button">Generate</button>
+                    <button type="submit" class="btn btn-outline-light" type="button">Load</button>
+                    <button type="submit" class="btn btn-outline-light" onclick="randomAxie()" type="button">Random</button>
                 </div>
             </div>
         </form>
