@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./js/api.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/jquery.dataTables.min.css" integrity="sha384-1UXhfqyOyO+W+XsGhiIFwwD3hsaHRz2XDGMle3b8bXPH5+cMsXVShDoHA3AH/y/p" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js" integrity="sha384-r3v0/sXe5ocDydKBFcxP390rex2dEm9qN3Yv68S6uNX/F3b/RtMdGMUADZ8tabkz" crossorigin="anonymous"></script>
+    <title>Axie Origin Cards Preview</title>
+</head>
+<body style="background-color: #595959; color: #fff">
+    <header><h1 class="text-center mt-3">Preview Axie Origin Cards</h1></header>
+    <script>
+        $(document).ready(function(){
+            cargado();
+        });
+        function cargado(){
+            refresh();
+        }
+        function getQueryParameter(name) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == name) {
+                    return pair[1];
+                }
+            }
+            return false;
+        }
+        function refresh(){
+            let axieId = parseInt(getQueryParameter("axieId"));
+            if (axieId) {
+                loadAxie(axieId)
+            }else{alert("Error! You have entered an invalid axie id.")}
+        }
+        async function getAxie(id, callback) {
+            let data = await getAxieDetails(id);
+            return data
+        }
+        async function loadAxie(id){
+            let axie = await getAxie(id);
+            let axieParts = axie.parts
+            renderCards(axieParts, "cards")
+        }
+        function renderCards(parts, target){
+            for(let i in parts){
+                let newData = '<div class="col-sm mb-5">';
+                newData += '<img src="./images/cards/' + parts[i].type + '/' + parts[i].name + '.png"' + "onerror=javascript:this.src=" + '"images/cards/Unknown.png"' +'>'
+                $("#" + target).append(newData + "</div>");
+            }
+        }
+    
+    </script>
+    <div id="headerDiv"></div><br/>
+    <div class="container">
+        <form class="" action="">
+            <div class="input-group mb-3 input-group-lg">
+                <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><img src="/images/axieicon.png" style="width: 28px"></span>
+                </div>
+                <input type="text" class="form-control" id="axieId" name="axieId" placeholder="Axie ID" aria-label="axieid">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-outline-light" type="button">Generate</button>
+                </div>
+            </div>
+        </form>
+        <div class="row" id="cards">
+
+        </div>
+    </div>
+    <footer>
+        <p class="text-center">– Created by fvku [fvku#5836] – </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
