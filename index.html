@@ -35,7 +35,7 @@
             let axieId = parseInt(getQueryParameter("axieId"));
             if (axieId) {
                 loadAxie(axieId)
-            }else{alert("Error! You have entered an invalid axie id.")}
+            }
         }
         async function getAxie(id, callback) {
             let data = await getAxieDetails(id);
@@ -60,7 +60,7 @@
         <form class="" action="">
             <div class="input-group mb-3 input-group-lg">
                 <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon1"><img src="/images/axieicon.png" style="width: 28px"></span>
+                <span class="input-group-text" id="basic-addon1"><img src="./images/axieicon.png" style="width: 28px"></span>
                 </div>
                 <input type="text" class="form-control" id="axieId" name="axieId" placeholder="Axie ID" aria-label="axieid">
                 <div class="input-group-append">
